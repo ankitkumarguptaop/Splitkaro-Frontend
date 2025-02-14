@@ -1,0 +1,33 @@
+.particular-group-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  margin: 15px;
+  width: 65vw;
+  height: 89vh;
+  background-color: rgb(222, 222, 222);
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-top: 5px;
+  height: 80px;
+  width: 63vw;
+  background-color: rgb(198, 225, 225);
+  div {
+    margin: 10px;
+  }
+}
+
+.group-content {
+  height: 75vh;
+  width: 63vw;
+  background-color: rgb(255, 255, 255);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
