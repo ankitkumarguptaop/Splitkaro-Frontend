@@ -13,7 +13,7 @@ const Input = ({ lable, height, width ,value ,error, setState }) => {
       onChange={setState}
       sx={{
         width: width,
-        input: { height: height, padding: "5px", margin: 0, color: "#808080" ,fontWeight:"light"},
+        input: { alignContent:"center", height: "37px", padding: "5px", color: "#808080" ,fontWeight:"light"},
       }}
     ></TextField>
   );

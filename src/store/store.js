@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "../features/auth/auth.slice";
 import groupReducer from "../features/group/group.slice";
+import userReducer from "../features/user/user.slice";
 import storage from "redux-persist/lib/storage";
 import {
   persistStore,
@@ -28,6 +29,7 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     group: groupReducer,
+    user :userReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

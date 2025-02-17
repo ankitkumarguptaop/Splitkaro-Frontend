@@ -4,18 +4,16 @@ import {
   Button,
   Divider,
   FormControl,
-  FormControlLabel,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Modal,
-  TextField,
   Typography,
 } from "@mui/material";
 import Input from "../input/input";
 import { FixedSizeList } from "react-window";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./group.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createGroup, listGroup } from "../../features/group/group.action";
@@ -29,8 +27,6 @@ const Group = () => {
   const groups = useSelector((state) => state.group.groups);
   const isOpenModal = useSelector((state) => state.group.isOpenModal);
   const currentUser = useSelector((state) => state.auth.currentUser);
-
-
 
   const [input, setInput] = useState({
     groupName: "",
@@ -89,7 +85,7 @@ const Group = () => {
         createGroup({
           name: input.groupName,
           description: input.description,
-          user_id: currentUser.user._id,
+          user_id: currentUser.user._id
         })
       );
       dispatch(setGroupModal(false));
@@ -111,7 +107,6 @@ const Group = () => {
 
     setIsEditState(false);
   }
-
 
   useEffect(() => {
     dispatch(listGroup({ user_id: currentUser.user._id }));
@@ -162,6 +157,9 @@ const Group = () => {
       </>
     );
   }
+
+
+  // console.log(groups)
 
   return (
     <>
@@ -248,7 +246,7 @@ const Group = () => {
           }}
         >
           <FixedSizeList
-            height={580}
+            height={600}
             width={"100%"}
             itemSize={80}
             itemCount={1}
