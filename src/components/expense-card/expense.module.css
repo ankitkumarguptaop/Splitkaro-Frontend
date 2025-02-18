@@ -1,0 +1,16 @@
+
+.participant-container{
+  width:100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.participant{
+    width:95%;
+    height: 40px;
+    background-color: aqua;
+    
+}

@@ -3,16 +3,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/auth.slice";
 import groupReducer from "../features/group/group.slice";
 import userReducer from "../features/user/user.slice";
+import expenseReducer from "../features/expense/expense.slice";
 import storage from "redux-persist/lib/storage";
 import {
   persistStore,
   persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
+
 } from "redux-persist";
 
 const persistAuthUserConfig = {
@@ -29,7 +25,8 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     group: groupReducer,
-    user :userReducer
+    user :userReducer,
+    expense:expenseReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

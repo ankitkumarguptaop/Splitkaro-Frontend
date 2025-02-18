@@ -15,11 +15,12 @@ import { logout } from "../../features/auth/auth.slice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setGroupModal } from "../../features/group/group.slice";
+import { useState } from "react";
 
 export default function AccountMenu({ pictureUrl }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   
   const handleClick = (event) => {

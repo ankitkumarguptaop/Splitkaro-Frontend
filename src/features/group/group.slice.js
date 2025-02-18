@@ -5,19 +5,21 @@ import {
   listGroup,
   listGroupMember,
   updatedGroup,
+  addMembers,
+  removeMembers,
 } from "./group.action";
 
 const initialState = {
   groups: [],
-  currentGroupMembers:[],
+  currentGroupMembers: [],
   currentSelectedGroup: null,
   isOpenModal: false,
   isLoading: false,
   error: null,
-  checkboxSelection:false
+  checkboxSelection: false,
 };
 
-export const authUserSlice = createSlice({
+export const groupSlice = createSlice({
   name: "group",
   initialState,
   reducers: {
@@ -30,9 +32,9 @@ export const authUserSlice = createSlice({
     setGroupModal: (state, action) => {
       state.isOpenModal = action.payload;
     },
-    setCheckboxSelection:(state,action)=>{
-      state.checkboxSelection=action.payload;
-    }
+    setCheckboxSelection: (state, action) => {
+      state.checkboxSelection = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -41,9 +43,9 @@ export const authUserSlice = createSlice({
       })
       .addCase(deleteGroup.fulfilled, (state, action) => {
         state.groups = state.groups.filter(
-          (group) => group.group_id._id !== action.payload.group._id,
+          (group) => group.group_id._id !== action.payload.group._id
         );
-        state.currentSelectedGroup=null
+        state.currentSelectedGroup = null;
         state.isLoading = false;
       })
       .addCase(deleteGroup.rejected, (state, action) => {
@@ -77,7 +79,7 @@ export const authUserSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createGroup.fulfilled, (state, action) => {
-        state.groups = [...state.groups , {group_id : action.payload}];
+        state.groups = [...state.groups, { group_id: action.payload }];
         state.isLoading = false;
       })
       .addCase(createGroup.rejected, (state, action) => {
@@ -88,17 +90,41 @@ export const authUserSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(listGroupMember.fulfilled, (state, action) => {
-        state.currentGroupMembers =  action.payload;
+        state.currentGroupMembers = action.payload;
         state.isLoading = false;
       })
       .addCase(listGroupMember.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(addMembers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addMembers.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(addMembers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(removeMembers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(removeMembers.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(removeMembers.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });
   },
 });
 
-export const { removeError, setCurrentSeletedGroup, setGroupModal ,setCheckboxSelection } =
-  authUserSlice.actions;
+export const {
+  removeError,
+  setCurrentSeletedGroup,
+  setGroupModal,
+  setCheckboxSelection,
+} = groupSlice.actions;
 
-export default authUserSlice.reducer;
+export default groupSlice.reducer;
