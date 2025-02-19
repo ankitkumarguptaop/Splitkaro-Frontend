@@ -24,7 +24,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import Input from "../input/input";
 import { useState } from "react";
 import { listGroupMember } from "../../features/group/group.action";
-import { listExpenseMember, updatedExpense } from "../../features/expense/expense.action";
+import {
+  addParticipant,
+  listExpenseMember,
+  updatedExpense,
+  updateSettlementExpense,
+} from "../../features/expense/expense.action";
 
 export default function ExpenseCard({
   amount,
@@ -32,49 +37,48 @@ export default function ExpenseCard({
   category,
   owner,
   members,
-  id
+  id,
 }) {
   const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.auth.currentUser);
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
 
-
-  const [payAmount, setPayAmount] = useState("")
-  const [leftAmount, setLeftPayAmount] = useState(100)
+  const [payAmount, setPayAmount] = useState("");
+  const [leftAmount, setLeftPayAmount] = useState(100);
   // const expenseMembers = useSelector((state) => state.expense.expenseParticipant);
-  console.log('✌️expenseMembers --->', members, id);
-
+  console.log("✌️expenseMembers --->", members, id);
 
   console.log("groupMembers --->", groupMembers);
   console.log("Members --->", members);
   const group = useSelector((state) => state.group.currentSelectedGroup);
 
-  const data = groupMembers?.map((member) => ({
-    id: member.member_id._id,
-    name: member.member_id.name,
-    phone_no: member.member_id.phone_no,
-    email: member.member_id.email
-  })).filter((member) => {
-    if (member.id === owner) {
-      return false
-    }
-    if (!members || members.length === 0) {
-      return true;
-    }
+  const data = groupMembers
+    ?.map((member) => ({
+      id: member.member_id._id,
+      name: member.member_id.name,
+      phone_no: member.member_id.phone_no,
+      email: member.member_id.email,
+    }))
+    .filter((member) => {
+      if (member.id === owner) {
+        return false;
+      }
+      if (!members || members.length === 0) {
+        return true;
+      }
 
-    return members.every((expenseMember) =>
-      member.id !== expenseMember.payer_id._id && member.id !== expenseMember.payee_id
-    );
-  });
-
+      return members.every(
+        (expenseMember) =>
+          member.id !== expenseMember.payer_id._id &&
+          member.id !== expenseMember.payee_id
+      );
+    });
 
   const [openExpenseParticipantModal, setOpenExpenseParticipantModal] =
     useState(false);
-  const [openAddParticipantModal, setOpenAddParticipantModal] =
-    useState(false);
+  const [openAddParticipantModal, setOpenAddParticipantModal] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-
 
   const styleModal = {
     top: "50%",
@@ -104,11 +108,8 @@ export default function ExpenseCard({
     name: member.payer_id.name,
     setelment_status: member.setelment_status,
     pay_amount: member.pay_amount,
-    phone_no: member.payer_id.phone_no
-  }))
-
-
-
+    phone_no: member.payer_id.phone_no,
+  }));
 
   const columns = [
     {
@@ -134,22 +135,24 @@ export default function ExpenseCard({
 
   function openModalToSeeLeftMembers() {
     setOpenExpenseParticipantModal(true);
-
   }
 
   function openAddMemberToExpenseModal() {
     setOpenExpenseParticipantModal(false);
-    setOpenAddParticipantModal(true)
+    setOpenAddParticipantModal(true);
   }
-
-
 
   function addParticipantTOExpense() {
-    setOpenAddParticipantModal(false)
-
+    dispatch(
+      addParticipant({
+        user_id: selectedRows[0],
+        expense_id: id,
+        pay_amount: payAmount,
+        group_id: group.group_id._id,
+      })
+    );
+    setOpenAddParticipantModal(false);
   }
-
-  console.log('✌️selectedRows --->', selectedRows);
 
   return (
     <>
@@ -195,8 +198,35 @@ export default function ExpenseCard({
                         {row.name}
                       </TableCell>
                       <TableCell align="right">{row.pay_amount}</TableCell>
-                      <TableCell sx={{ backgroundColor: row.setelment_status ? "green" : "yellow" }} align="right">{row.setelment_status ? "Paid" : "Pending"}</TableCell>
-                      <TableCell align="right">{row.id === currentUser.user._id && !row.setelment_status && <Button variant="contained" onClick={() => dispatch(updatedExpense)}>Pay</Button>}</TableCell>
+                      <TableCell
+                        sx={{
+                          backgroundColor: row.setelment_status
+                            ? "green"
+                            : "yellow",
+                        }}
+                        align="right"
+                      >
+                        {row.setelment_status ? "Paid" : "Pending"}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.id === currentUser.user._id &&
+                          !row.setelment_status && (
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                dispatch(
+                                  updateSettlementExpense({
+                                    expense_id: id,
+                                    setelment_status: true,
+                                    user_id: row.id,
+                                  })
+                                )
+                              }}
+                            >
+                              Pay
+                            </Button>
+                          )}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -206,7 +236,11 @@ export default function ExpenseCard({
         </CardActionArea>
         <CardActions>
           {currentUser.user._id === owner && (
-            <Button size="small" color="primary" onClick={openModalToSeeLeftMembers}>
+            <Button
+              size="small"
+              color="primary"
+              onClick={openModalToSeeLeftMembers}
+            >
               Add participant
             </Button>
           )}
@@ -236,7 +270,6 @@ export default function ExpenseCard({
               checkboxSelection={false}
               onStateChange={(event) => {
                 setSelectedRows(event.rowSelection);
-
               }}
               onCellClick={openAddMemberToExpenseModal}
             />
@@ -264,7 +297,7 @@ export default function ExpenseCard({
       </Modal>
 
       <FormControl className="form" sx={{ borderRadius: "10px" }}>
-        <Modal sx={styleChildModal} open={openAddParticipantModal} >
+        <Modal sx={styleChildModal} open={openAddParticipantModal}>
           <Box className="add-functionality" sx={{ borderRadius: "10px" }}>
             <Box className="add-text">Add Participant</Box>
             <Box className={style.amount}>
@@ -276,15 +309,15 @@ export default function ExpenseCard({
                 width={"95%"}
                 value={payAmount}
                 error={false}
-                setState={(e) =>
-                  setPayAmount(e.target.value)
-                }
+                setState={(e) => setPayAmount(e.target.value)}
               ></Input>
             </Box>
-            <Box sx={{ display: "flex", margin: "5px 5px" }} className={style["left-amount"]}>
-              <Typography >LeftAmount : </Typography>
-              <Typography >{leftAmount}</Typography>
-
+            <Box
+              sx={{ display: "flex", margin: "5px 5px" }}
+              className={style["left-amount"]}
+            >
+              <Typography>LeftAmount : </Typography>
+              <Typography>{leftAmount}</Typography>
             </Box>
 
             <Box className="Add-edit-close-button">
@@ -310,11 +343,6 @@ export default function ExpenseCard({
           </Box>
         </Modal>
       </FormControl>
-
-
-
-
-
     </>
   );
 }

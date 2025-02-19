@@ -1,6 +1,7 @@
 export const CREATE_EXPENSE = "expense/CREATE";
 export const DELETE_EXPENSE = "expense/DELETE";
 export const UPDATE_EXPENSE = "expense/UPDATE";
+export const UPDATE_SETELMENT_STATUS = "setelment/UPDATE";
 export const LIST_EXPENSE = "expense/LIST";
 export const ADD_PARTICIPANT = "participant/ADD";
 export const REMOVE_PARTICIPANT= "participant/REMOVE";

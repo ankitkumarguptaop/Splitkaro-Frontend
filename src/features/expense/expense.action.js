@@ -16,7 +16,8 @@ import {
   CREATE_EXPENSE,
   ADD_PARTICIPANT,
   REMOVE_PARTICIPANT,
-  LIST_EXPENSE_PARTICIPANT
+  LIST_EXPENSE_PARTICIPANT,
+  UPDATE_SETELMENT_STATUS
 } from "./expense.type";
 
 export const listExpense = createAsyncThunk(LIST_EXPENSE, async (payload) => {
@@ -33,6 +34,17 @@ export const listExpenseParticipants = createAsyncThunk(LIST_EXPENSE_PARTICIPANT
     return data;
   });
   
+export const updateSettlementExpense = createAsyncThunk(
+  UPDATE_SETELMENT_STATUS,
+  async (payload) => {
+    const res = await updateSettlementService(payload);
+    const data = res.data;
+    console.log("res data", data);
+    return res;
+  }
+);
+
+
 export const updatedExpense = createAsyncThunk(
   UPDATE_EXPENSE,
   async (payload) => {

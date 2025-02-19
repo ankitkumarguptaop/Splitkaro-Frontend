@@ -37,8 +37,11 @@ const ParticularGroup = () => {
   const group = useSelector((state) => state.group.currentSelectedGroup);
   const expenses = useSelector((state) => state.expense.expenses);
   const currentUser = useSelector((state) => state.auth.currentUser);
-    const expenseMembers = useSelector((state) => state.expense.expenseParticipant);
-  
+  const expenseMembers = useSelector(
+    (state) => state.expense.expenseParticipant
+  );
+  console.log( "ggggggg" ,expenseMembers)
+
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAddTOGroup, setAddTOGroup] = useState(false);
@@ -123,7 +126,7 @@ const ParticularGroup = () => {
       description: "",
       amount: "",
       category: "",
-    })
+    });
     setIsOpenModal(false);
   }
 
@@ -135,7 +138,7 @@ const ParticularGroup = () => {
         })
       );
 
-      group &&
+    group &&
       dispatch(
         listExpenseParticipants({
           group_id: group?.group_id?._id,
@@ -154,7 +157,9 @@ const ParticularGroup = () => {
             expenseDescription={expense.description}
             category={expense.category}
             owner={expense.created_by}
-            members={expenseMembers.filter((member)=>(member.expense_id===expense._id))}
+            members={expenseMembers.filter(
+              (member) => member.expense_id === expense._id
+            )}
           ></ExpenseCard>
         ))}
       </>
@@ -166,7 +171,7 @@ const ParticularGroup = () => {
       description: "",
       amount: "",
       category: "",
-    })
+    });
     setIsOpenModal(false);
   }
 
@@ -241,7 +246,7 @@ const ParticularGroup = () => {
               }}
             >
               <FixedSizeList
-                height={480}
+                height={600}
                 width={"100%"}
                 itemSize={1}
                 itemCount={1}

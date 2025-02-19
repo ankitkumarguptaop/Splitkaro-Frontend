@@ -51,7 +51,7 @@ export const listExpenseMemberService = async (payload) => {
 export const updateSettlementService = async (payload) => {
   const { expense_id, setelment_status, user_id } = payload;
   return await axios.patch(
-    `${process.env.REACT_APP_BACKEND_URL}expense/participants${user_id}`,
+    `${process.env.REACT_APP_BACKEND_URL}expense/participants/${user_id}`,
     { setelment_status: setelment_status, expense_id: expense_id },
     { withCredentials: true }
   );

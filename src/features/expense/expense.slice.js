@@ -7,11 +7,12 @@ import {
   updatedExpense,
   addParticipant,
   removeParticipant,
+  updateSettlementExpense,
 } from "./expense.action";
 
 const initialState = {
   expenses: [],
-  expenseParticipant:[],
+  expenseParticipant: [],
   isLoading: false,
   error: null,
 };
@@ -49,6 +50,20 @@ export const expenseSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message;
       })
+      .addCase(updateSettlementExpense.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateSettlementExpense.fulfilled, (state, action) => {
+        const index = state.expenseParticipant.findIndex(
+          (participant) => participant._id === action.payload.data._id
+        );
+        state.expenseParticipant.splice(index, 1, action.payload.data);
+        state.isLoading = false;
+      })
+      .addCase(updateSettlementExpense.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
       .addCase(listExpense.pending, (state) => {
         state.isLoading = true;
       })
@@ -64,7 +79,7 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createExpense.fulfilled, (state, action) => {
-        state.expenses = [...state.expenses, action.payload ];
+        state.expenses = [...state.expenses, action.payload];
         state.isLoading = false;
       })
       .addCase(createExpense.rejected, (state, action) => {
@@ -75,7 +90,7 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(listExpenseMember.fulfilled, (state, action) => {
-        state.expenseParticipant=action.payload
+        state.expenseParticipant = action.payload;
         state.isLoading = false;
       })
       .addCase(listExpenseMember.rejected, (state, action) => {
@@ -86,6 +101,11 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addParticipant.fulfilled, (state, action) => {
+        console.log(" --->", action.payload);
+        state.expenseParticipant = [
+          ...state.expenseParticipant,
+          action.payload,
+        ];
         state.isLoading = false;
       })
       .addCase(addParticipant.rejected, (state, action) => {
