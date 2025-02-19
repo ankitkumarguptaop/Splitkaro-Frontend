@@ -41,9 +41,9 @@ export const createExpenseService = async (payload) => {
 };
 
 export const listExpenseMemberService = async (payload) => {
-  const { expense_id, search } = payload;
+  const { group_id, search } = payload;
   return await axios.get(
-    `${process.env.REACT_APP_BACKEND_URL}expense/participants/${expense_id}?search=${search}`,
+    `${process.env.REACT_APP_BACKEND_URL}expense/participants/${group_id}?search=${search}`,
     { withCredentials: true }
   );
 };

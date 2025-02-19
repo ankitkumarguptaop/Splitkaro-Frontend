@@ -28,6 +28,8 @@ import Input from "../input/input";
 import {
   createExpense,
   listExpense,
+  listExpenseMember,
+  listExpenseParticipants,
 } from "../../features/expense/expense.action";
 
 const ParticularGroup = () => {
@@ -35,6 +37,8 @@ const ParticularGroup = () => {
   const group = useSelector((state) => state.group.currentSelectedGroup);
   const expenses = useSelector((state) => state.expense.expenses);
   const currentUser = useSelector((state) => state.auth.currentUser);
+    const expenseMembers = useSelector((state) => state.expense.expenseParticipant);
+  
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAddTOGroup, setAddTOGroup] = useState(false);
@@ -130,6 +134,13 @@ const ParticularGroup = () => {
           group_id: group?.group_id?._id,
         })
       );
+
+      group &&
+      dispatch(
+        listExpenseParticipants({
+          group_id: group?.group_id?._id,
+        })
+      );
   }, [group]);
 
   function renderRow() {
@@ -138,10 +149,12 @@ const ParticularGroup = () => {
         {expenses.map((expense) => (
           <ExpenseCard
             key={expense._id}
+            id={expense._id}
             amount={expense.amount}
             expenseDescription={expense.description}
             category={expense.category}
             owner={expense.created_by}
+            members={expenseMembers.filter((member)=>(member.expense_id===expense._id))}
           ></ExpenseCard>
         ))}
       </>

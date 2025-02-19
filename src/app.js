@@ -1,12 +1,11 @@
-
 import Signin from "./pages/signin/signin";
 import "./global.css"
-
+import Router from "./router";
+import { useRoutes } from "react-router-dom";
 
 function App() {
-  return (
-  <Signin></Signin>
-  );
+  const router = useRoutes(Router())
+  return router
 }
 
 export default App;

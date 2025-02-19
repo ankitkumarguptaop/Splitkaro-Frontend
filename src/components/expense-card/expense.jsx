@@ -7,9 +7,10 @@ import Button from "@mui/material/Button";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
-// import style from "./expense.module.css";
+import style from "./expense.module.css";
 import {
   Box,
+  FormControl,
   Modal,
   Table,
   TableBody,
@@ -23,45 +24,59 @@ import { DataGrid } from "@mui/x-data-grid";
 import Input from "../input/input";
 import { useState } from "react";
 import { listGroupMember } from "../../features/group/group.action";
+import { listExpenseMember, updatedExpense } from "../../features/expense/expense.action";
 
 export default function ExpenseCard({
   amount,
   expenseDescription,
   category,
   owner,
+  members,
+  id
 }) {
   const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.auth.currentUser);
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
-  const expenseMembers = useSelector((state) => state.expense.currentGroupMembers);
+
+
+  const [payAmount, setPayAmount] = useState("")
+  const [leftAmount, setLeftPayAmount] = useState(100)
+  // const expenseMembers = useSelector((state) => state.expense.expenseParticipant);
+  console.log('✌️expenseMembers --->', members, id);
+
 
   console.log("groupMembers --->", groupMembers);
-  const data = [];
+  console.log("Members --->", members);
   const group = useSelector((state) => state.group.currentSelectedGroup);
 
-  // const data = groupMembers.map((member) => {
-  //   return {
-  //     id: member.member_id._id,
-  //     name: member.member_id.name,
-  //     phone_no: member.member_id.phone_no,
-  //     email: member.member_id.email
-  //   };
-  // }).filter((member)=>{
-  //     return expenseMembers.find((expenseMember)=>{
-  //        id!=expenseMember._id
-  //     })
-  // })
+  const data = groupMembers?.map((member) => ({
+    id: member.member_id._id,
+    name: member.member_id.name,
+    phone_no: member.member_id.phone_no,
+    email: member.member_id.email
+  })).filter((member) => {
+    if (member.id === owner) {
+      return false
+    }
+    if (!members || members.length === 0) {
+      return true;
+    }
+
+    return members.every((expenseMember) =>
+      member.id !== expenseMember.payer_id._id && member.id !== expenseMember.payee_id
+    );
+  });
+
 
   const [openExpenseParticipantModal, setOpenExpenseParticipantModal] =
     useState(false);
+  const [openAddParticipantModal, setOpenAddParticipantModal] =
+    useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
 
-  const style = {
+  const styleModal = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
@@ -72,8 +87,28 @@ export default function ExpenseCard({
     color: "black",
     p: 3,
   };
+  const styleChildModal = {
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "27vw",
+    minWidth: "350px",
+    height: "250px",
+    bgcolor: "rgb(255, 255, 255)",
+    color: "black",
+    p: 3,
+  };
 
-  const rows = [createData("Frozen yoghurt", 159, 6.0, 24, 4.0)];
+  const rows = members.map((member) => ({
+    id: member.payer_id._id,
+    name: member.payer_id.name,
+    setelment_status: member.setelment_status,
+    pay_amount: member.pay_amount,
+    phone_no: member.payer_id.phone_no
+  }))
+
+
+
 
   const columns = [
     {
@@ -97,17 +132,28 @@ export default function ExpenseCard({
     },
   ];
 
-  function openModalTOAddMember() {
+  function openModalToSeeLeftMembers() {
     setOpenExpenseParticipantModal(true);
+
   }
 
-  function addMemberToExpense() {
-    // setOpenExpenseParticipantModal(false);
+  function openAddMemberToExpenseModal() {
+    setOpenExpenseParticipantModal(false);
+    setOpenAddParticipantModal(true)
   }
+
+
+
+  function addParticipantTOExpense() {
+    setOpenAddParticipantModal(false)
+
+  }
+
+  console.log('✌️selectedRows --->', selectedRows);
 
   return (
     <>
-      <Card sx={{ maxWidth: 650, borderRadius: "10px", margin: "10px" }}>
+      <Card sx={{ maxWidth: "95%", margin: "10px" }}>
         <CardActionArea>
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
@@ -148,9 +194,9 @@ export default function ExpenseCard({
                       <TableCell component="th" scope="row">
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
+                      <TableCell align="right">{row.pay_amount}</TableCell>
+                      <TableCell sx={{ backgroundColor: row.setelment_status ? "green" : "yellow" }} align="right">{row.setelment_status ? "Paid" : "Pending"}</TableCell>
+                      <TableCell align="right">{row.id === currentUser.user._id && !row.setelment_status && <Button variant="contained" onClick={() => dispatch(updatedExpense)}>Pay</Button>}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -160,7 +206,7 @@ export default function ExpenseCard({
         </CardActionArea>
         <CardActions>
           {currentUser.user._id === owner && (
-            <Button size="small" color="primary" onClick={openModalTOAddMember}>
+            <Button size="small" color="primary" onClick={openModalToSeeLeftMembers}>
               Add participant
             </Button>
           )}
@@ -168,7 +214,7 @@ export default function ExpenseCard({
       </Card>
 
       <Modal
-        sx={style}
+        sx={styleModal}
         open={openExpenseParticipantModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -177,11 +223,6 @@ export default function ExpenseCard({
           <Box sx={{ height: "300px" }}>
             <DataGrid
               rows={data}
-              // getRowId={(member) => {
-              //   console.log(member);
-              //   return member.id;
-              // }}
-
               columns={columns}
               initialState={{
                 pagination: {
@@ -191,21 +232,24 @@ export default function ExpenseCard({
                 },
               }}
               pageSizeOptions={[5]}
+              sx={{ cursor: "pointer" }}
               checkboxSelection={false}
               onStateChange={(event) => {
                 setSelectedRows(event.rowSelection);
+
               }}
+              onCellClick={openAddMemberToExpenseModal}
             />
           </Box>
 
           <Box className="Add-close-button">
-            <Button
+            {/* <Button
               sx={{ marginLeft: "5px", marginRight: "5px" }}
               variant="contained"
               onClick={addMemberToExpense}
             >
               Add
-            </Button>
+            </Button> */}
 
             <Button
               variant="contained"
@@ -218,6 +262,59 @@ export default function ExpenseCard({
           </Box>
         </Box>
       </Modal>
+
+      <FormControl className="form" sx={{ borderRadius: "10px" }}>
+        <Modal sx={styleChildModal} open={openAddParticipantModal} >
+          <Box className="add-functionality" sx={{ borderRadius: "10px" }}>
+            <Box className="add-text">Add Participant</Box>
+            <Box className={style.amount}>
+              <Typography>Enter pay Amount</Typography>
+
+              <Input
+                lable="Amount"
+                height={"40px"}
+                width={"95%"}
+                value={payAmount}
+                error={false}
+                setState={(e) =>
+                  setPayAmount(e.target.value)
+                }
+              ></Input>
+            </Box>
+            <Box sx={{ display: "flex", margin: "5px 5px" }} className={style["left-amount"]}>
+              <Typography >LeftAmount : </Typography>
+              <Typography >{leftAmount}</Typography>
+
+            </Box>
+
+            <Box className="Add-edit-close-button">
+              <Button
+                disableRipple
+                disableElevation
+                className="add-expense"
+                onClick={addParticipantTOExpense}
+                variant="contained"
+              >
+                {"Create"}
+              </Button>
+              <Button
+                disableRipple
+                disableElevation
+                className="close-modal"
+                onClick={() => setOpenAddParticipantModal(false)}
+                variant="contained"
+              >
+                {"Close"}
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
+      </FormControl>
+
+
+
+
+
     </>
   );
 }

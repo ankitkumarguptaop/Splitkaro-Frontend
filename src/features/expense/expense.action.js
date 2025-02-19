@@ -7,6 +7,7 @@ import {
   createExpenseService,
   addParticipantService,
   removeParticipantService,
+  updateSettlementService
 } from "../../services/expense.service";
 import {
   LIST_EXPENSE,

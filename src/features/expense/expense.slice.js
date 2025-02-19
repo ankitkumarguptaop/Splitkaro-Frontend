@@ -11,6 +11,7 @@ import {
 
 const initialState = {
   expenses: [],
+  expenseParticipant:[],
   isLoading: false,
   error: null,
 };
@@ -52,7 +53,6 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(listExpense.fulfilled, (state, action) => {
-       console.log('✌️action.payload --->', action.payload);
         state.expenses = action.payload;
         state.isLoading = false;
       })
@@ -75,6 +75,7 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(listExpenseMember.fulfilled, (state, action) => {
+        state.expenseParticipant=action.payload
         state.isLoading = false;
       })
       .addCase(listExpenseMember.rejected, (state, action) => {
