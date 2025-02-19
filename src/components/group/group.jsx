@@ -16,17 +16,24 @@ import { FixedSizeList } from "react-window";
 import React, { useEffect, useState } from "react";
 import style from "./group.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createGroup, listGroup } from "../../features/group/group.action";
+import {
+  createGroup,
+  listGroup,
+  updatedGroup,
+} from "../../features/group/group.action";
 import {
   setCurrentSeletedGroup,
   setGroupModal,
 } from "../../features/group/group.slice";
+import ParticularGroup from "../particular-group/particular-group";
 
 const Group = () => {
   const dispatch = useDispatch();
   const groups = useSelector((state) => state.group.groups);
+  const group = useSelector((state) => state.group.currentSelectedGroup);
   const isOpenModal = useSelector((state) => state.group.isOpenModal);
   const currentUser = useSelector((state) => state.auth.currentUser);
+  console.log('✌️groups --->', groups);
 
   const [input, setInput] = useState({
     groupName: "",
@@ -85,9 +92,13 @@ const Group = () => {
         createGroup({
           name: input.groupName,
           description: input.description,
-          user_id: currentUser.user._id
+          user_id: currentUser.user._id,
         })
       );
+      setInput({
+        groupName: "",
+        description: "",
+      });
       dispatch(setGroupModal(false));
     } catch (error) {
       console.log(error);
@@ -106,6 +117,27 @@ const Group = () => {
     dispatch(setGroupModal(false));
 
     setIsEditState(false);
+  }
+
+  function handleEditGroup() {
+    try {
+      dispatch(
+        updatedGroup({
+          updatedData: {
+            name: input.groupName,
+            description: input.description,
+          },
+          group_id: group.group_id._id,
+        })
+      );
+      dispatch(setGroupModal(false));
+      setInput({
+        groupName: "",
+        description: "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -157,7 +189,6 @@ const Group = () => {
       </>
     );
   }
-
 
   // console.log(groups)
 
@@ -215,7 +246,7 @@ const Group = () => {
                 disableRipple
                 disableElevation
                 className="add-contacts"
-                onClick={handleCreateGroup}
+                onClick={isEditState ? handleEditGroup : handleCreateGroup}
                 variant="contained"
               >
                 {isEditState ? "Edit" : "Create"}
@@ -256,6 +287,10 @@ const Group = () => {
           </FixedSizeList>
         </Box>
       </Box>
+      <ParticularGroup
+        setInput={setInput}
+        setIsEditState={setIsEditState}
+      ></ParticularGroup>
     </>
   );
 };

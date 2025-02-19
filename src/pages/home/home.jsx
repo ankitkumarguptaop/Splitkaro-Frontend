@@ -10,8 +10,7 @@ const Home = () => {
   return <Box className ={style["main-container"]}>
     <Navbar></Navbar>
     <Box className={style["group-container"]}>
-      <Group></Group>
-      <ParticularGroup></ParticularGroup>
+      <Group ></Group>
     </Box>
   </Box>;
 };

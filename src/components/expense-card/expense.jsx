@@ -191,8 +191,11 @@ export default function ExpenseCard({
                 <TableBody>
                   {rows.map((row) => (
                     <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      key={row.id}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        height: "40px",
+                      }}
                     >
                       <TableCell component="th" scope="row">
                         {row.name}
@@ -220,7 +223,7 @@ export default function ExpenseCard({
                                     setelment_status: true,
                                     user_id: row.id,
                                   })
-                                )
+                                );
                               }}
                             >
                               Pay

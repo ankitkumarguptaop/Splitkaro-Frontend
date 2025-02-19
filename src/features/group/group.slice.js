@@ -56,8 +56,17 @@ export const groupSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updatedGroup.fulfilled, (state, action) => {
+        console.log("✌️action.payload --->", action.payload);
+        const index = state.groups.findIndex(
+          (group) => group.group_id._id === action.payload.data.group._id
+        );
+        console.log("✌️index --->", index);
+        state.groups[index].group_id = { ...action.payload.data.group };
+        state.currentSelectedGroup = {
+          group_id: { ...action.payload.data.group },
+        };
+
         state.isLoading = false;
-        state.currentUser = action.payload.data;
       })
       .addCase(updatedGroup.rejected, (state, action) => {
         state.isLoading = false;

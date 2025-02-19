@@ -32,7 +32,7 @@ import {
   listExpenseParticipants,
 } from "../../features/expense/expense.action";
 
-const ParticularGroup = () => {
+const ParticularGroup = ({ setInput, setIsEditState }) => {
   const dispatch = useDispatch();
   const group = useSelector((state) => state.group.currentSelectedGroup);
   const expenses = useSelector((state) => state.expense.expenses);
@@ -40,7 +40,7 @@ const ParticularGroup = () => {
   const expenseMembers = useSelector(
     (state) => state.expense.expenseParticipant
   );
-  console.log( "ggggggg" ,expenseMembers)
+  console.log("ggggggg", expenseMembers);
 
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -48,7 +48,7 @@ const ParticularGroup = () => {
   const open = Boolean(anchorEl);
 
   const [openGroupMemberModal, setOpenGroupMemberModal] = useState(false);
-  const [isEditState, setIsEditState] = useState(false);
+  const [isEditStateExpense, setIsEditStateExpense] = useState(false);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -212,6 +212,11 @@ const ParticularGroup = () => {
                   <MenuItem
                     sx={{ color: "green" }}
                     onClick={() => {
+                      setIsEditState(true);
+                      setInput({
+                        groupName: group.group_id.name,
+                        description: group.group_id.description,
+                      });
                       dispatch(setGroupModal(true));
                     }}
                   >
@@ -313,7 +318,7 @@ const ParticularGroup = () => {
                 onClick={addExpense}
                 variant="contained"
               >
-                {isEditState ? "Edit" : "Create"}
+                {isEditStateExpense ? "Edit" : "Create"}
               </Button>
               <Button
                 disableRipple
