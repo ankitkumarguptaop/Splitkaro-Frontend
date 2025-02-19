@@ -83,7 +83,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function viewMembers() {
     setAddTOGroup(false);
     dispatch(setCheckboxSelection(false));
-    dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
+    // dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
   }
@@ -91,7 +91,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function addMembers() {
     setAddTOGroup(true);
     dispatch(setCheckboxSelection(true));
-    dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
+    // dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
     dispatch(listUser({ group_id: group.group_id._id, search: "" }));
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
@@ -100,7 +100,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function removeMembers() {
     setAddTOGroup(false);
     dispatch(setCheckboxSelection(true));
-    dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
+    // dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
   }
@@ -144,6 +144,9 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
           group_id: group?.group_id?._id,
         })
       );
+
+    group &&
+      dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
   }, [group]);
 
   function renderRow() {

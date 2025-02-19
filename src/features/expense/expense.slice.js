@@ -31,8 +31,9 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteExpense.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.expenses = state.expenses.filter(
-          (expense) => expense.expenses._id !== action.payload.expenses._id
+          (expense) => expense._id !== action.payload.expense._id
         );
         state.isLoading = false;
       })

@@ -26,10 +26,12 @@ import { useState } from "react";
 import { listGroupMember } from "../../features/group/group.action";
 import {
   addParticipant,
+  deleteExpense,
   listExpenseMember,
   updatedExpense,
   updateSettlementExpense,
 } from "../../features/expense/expense.action";
+import { useEffect } from "react";
 
 export default function ExpenseCard({
   amount,
@@ -45,7 +47,8 @@ export default function ExpenseCard({
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
 
   const [payAmount, setPayAmount] = useState("");
-  const [leftAmount, setLeftPayAmount] = useState(100);
+  const [leftAmount, setLeftPayAmount] = useState(parseInt(amount));
+
   // const expenseMembers = useSelector((state) => state.expense.expenseParticipant);
   console.log("✌️expenseMembers --->", members, id);
 
@@ -154,6 +157,20 @@ export default function ExpenseCard({
     setOpenAddParticipantModal(false);
   }
 
+  function deleteParticularExpense() {
+    dispatch(
+      deleteExpense({
+        expense_id: id,
+      })
+    );
+  }
+  let assignedAmmount = 0;
+  useEffect(() => {
+    for (let i = 0; i < members.length; i++) {
+      assignedAmmount += members[i].pay_amount;
+    }
+    console.log(assignedAmmount);
+  }, [members, leftAmount]);
   return (
     <>
       <Card sx={{ maxWidth: "95%", margin: "10px" }}>
@@ -237,17 +254,36 @@ export default function ExpenseCard({
             </TableContainer>
           </CardContent>
         </CardActionArea>
-        <CardActions>
-          {currentUser.user._id === owner && (
+        {currentUser.user._id === owner && (
+          <CardActions
+            sx={{ display: "flex", justifyContent: "space-between" }}
+          >
             <Button
               size="small"
               color="primary"
+              variant="contained"
+              sx={{
+                marginLeft: "5px",
+                marginRight: "5px",
+              }}
               onClick={openModalToSeeLeftMembers}
             >
               Add participant
             </Button>
-          )}
-        </CardActions>
+            <Button
+              size="small"
+              sx={{
+                backgroundColor: "red",
+                color: "black",
+                marginLeft: "5px",
+                marginRight: "5px",
+              }}
+              onClick={deleteParticularExpense}
+            >
+              Delete
+            </Button>
+          </CardActions>
+        )}
       </Card>
 
       <Modal
@@ -311,28 +347,47 @@ export default function ExpenseCard({
                 height={"40px"}
                 width={"95%"}
                 value={payAmount}
-                error={false}
-                setState={(e) => setPayAmount(e.target.value)}
+                error={leftAmount < 0}
+                setState={(e) => {
+                  setPayAmount(e.target.value);
+                  setLeftPayAmount(
+                    parseInt(amount) -
+                      parseInt(assignedAmmount) -
+                      parseInt(e.target.value)
+                  );
+                }}
               ></Input>
             </Box>
             <Box
               sx={{ display: "flex", margin: "5px 5px" }}
               className={style["left-amount"]}
             >
-              <Typography>LeftAmount : </Typography>
-              <Typography>{leftAmount}</Typography>
+              <Typography sx={{ color: leftAmount < 0 ? "red" : "black" }}>
+                LeftAmount :{" "}
+              </Typography>
+              {leftAmount >= 0 ? (
+                <Typography sx={{ color: leftAmount < 0 ? "red" : "black" }}>
+                  {leftAmount}
+                </Typography>
+              ) : (
+                <Typography sx={{ color: "red" }}>
+                  payamount is more than left amount
+                </Typography>
+              )}
             </Box>
 
             <Box className="Add-edit-close-button">
-              <Button
-                disableRipple
-                disableElevation
-                className="add-expense"
-                onClick={addParticipantTOExpense}
-                variant="contained"
-              >
-                {"Create"}
-              </Button>
+              {leftAmount > 0 && (
+                <Button
+                  disableRipple
+                  disableElevation
+                  className="add-expense"
+                  onClick={addParticipantTOExpense}
+                  variant="contained"
+                >
+                  {"Create"}
+                </Button>
+              )}
               <Button
                 disableRipple
                 disableElevation
