@@ -1,17 +1,19 @@
-
 import axios from "axios";
 
-export const signupUserService = async (signupData) => await axios.post(
+export const signupUserService = async (signupData) =>
+  await axios.post(
     `${process.env.REACT_APP_BACKEND_URL}auth/signup`,
-    signupData
+    signupData,
   );
 
-export const signinUserService = async (signinData) => await axios.post(
+export const signinUserService = async (signinData) =>
+  await axios.post(
     `${process.env.REACT_APP_BACKEND_URL}auth/signin`,
-    signinData
+    signinData,
   );
 
-export const googleAuthUserService = async(googleAuthData) => await axios.post(
+export const googleAuthUserService = async (googleAuthData) =>
+  await axios.post(
     `${process.env.REACT_APP_BACKEND_URL}auth/google`,
-    googleAuthData
+    googleAuthData,
   );

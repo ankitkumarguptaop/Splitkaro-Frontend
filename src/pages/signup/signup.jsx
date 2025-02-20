@@ -45,7 +45,7 @@ const Signup = () => {
               email: result.user.email,
               name: result.user.displayName,
               avatar: result.user.photoURL,
-            })
+            }),
           );
           navigate("/home");
         }

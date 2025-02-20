@@ -73,7 +73,7 @@ export default function ExpenseCard({
       return members.every(
         (expenseMember) =>
           member.id !== expenseMember.payer_id._id &&
-          member.id !== expenseMember.payee_id
+          member.id !== expenseMember.payee_id,
       );
     });
 
@@ -153,7 +153,7 @@ export default function ExpenseCard({
         expense_id: id,
         pay_amount: payAmount,
         group_id: group.group_id._id,
-      })
+      }),
     );
     setOpenAddParticipantModal(false);
   }
@@ -162,7 +162,7 @@ export default function ExpenseCard({
     dispatch(
       deleteExpense({
         expense_id: id,
-      })
+      }),
     );
   }
 
@@ -283,7 +283,7 @@ export default function ExpenseCard({
                                     expense_id: id,
                                     setelment_status: true,
                                     user_id: row.id,
-                                  })
+                                  }),
                                 );
                               }}
                             >

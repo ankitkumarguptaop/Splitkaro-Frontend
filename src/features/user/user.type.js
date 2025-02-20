@@ -1,1 +1,1 @@
-export const LIST_USER= "users/LIST_USER";
+export const LIST_USER = "users/LIST_USER";

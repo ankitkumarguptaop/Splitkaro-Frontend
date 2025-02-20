@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import AccountMenu from "../profile/profile";
 
 const Navbar = () => {
-  
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const [pictureUrl, setPictureUrl] = useState("");
@@ -18,12 +17,10 @@ const Navbar = () => {
       setPictureUrl(currentUser.user.avatar);
     } else {
       setPictureUrl(
-        `${process.env.REACT_APP_BACKEND_URL}${currentUser.user.avatar}`
+        `${process.env.REACT_APP_BACKEND_URL}${currentUser.user.avatar}`,
       );
     }
   }, [currentUser]);
-
-
 
   return (
     <Box className={style["navbar"]}>
@@ -48,7 +45,6 @@ const Navbar = () => {
           {currentUser.user.name}
         </Typography>
         <AccountMenu pictureUrl={pictureUrl} />
-      
       </Box>
     </Box>
   );

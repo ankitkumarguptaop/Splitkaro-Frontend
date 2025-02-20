@@ -38,7 +38,7 @@ const Signin = () => {
               email: result.user.email,
               name: result.user.displayName,
               avatar: result.user.photoURL,
-            })
+            }),
           );
           navigate("/home");
         }
@@ -190,7 +190,7 @@ const Signin = () => {
           </Box>
         </Box>
         <Button
-        onClick={signinUser}
+          onClick={signinUser}
           sx={{
             color: "#FFFFFF",
             backgroundColor: "#E48700",

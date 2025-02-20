@@ -43,7 +43,7 @@ export const groupSlice = createSlice({
       })
       .addCase(deleteGroup.fulfilled, (state, action) => {
         state.groups = state.groups.filter(
-          (group) => group.group_id._id !== action.payload.group._id
+          (group) => group.group_id._id !== action.payload.group._id,
         );
         state.currentSelectedGroup = null;
         state.isLoading = false;
@@ -57,7 +57,7 @@ export const groupSlice = createSlice({
       })
       .addCase(updatedGroup.fulfilled, (state, action) => {
         const index = state.groups.findIndex(
-          (group) => group.group_id._id === action.payload.data.group._id
+          (group) => group.group_id._id === action.payload.data.group._id,
         );
         state.groups[index].group_id = { ...action.payload.data.group };
         state.currentSelectedGroup = {

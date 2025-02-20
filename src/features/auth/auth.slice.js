@@ -40,8 +40,7 @@ export const authUserSlice = createSlice({
         Cookies.set("jwt", action.payload.data.token, {
           expires: 7,
           secure: true,
-        }); 
-
+        });
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -57,7 +56,6 @@ export const authUserSlice = createSlice({
           expires: 7,
           secure: true,
         });
-
       })
       .addCase(googleAuth.rejected, (state, action) => {
         state.isLoading = false;

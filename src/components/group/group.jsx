@@ -92,7 +92,7 @@ const Group = () => {
           name: input.groupName,
           description: input.description,
           user_id: currentUser.user._id,
-        })
+        }),
       );
       setInput({
         groupName: "",
@@ -127,7 +127,7 @@ const Group = () => {
             description: input.description,
           },
           group_id: group.group_id._id,
-        })
+        }),
       );
       dispatch(setGroupModal(false));
       setInput({
@@ -189,7 +189,6 @@ const Group = () => {
       </>
     );
   }
-
 
   return (
     <>

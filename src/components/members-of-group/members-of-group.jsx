@@ -24,7 +24,7 @@ const GroupMember = ({
 
   const group = useSelector((state) => state.group.currentSelectedGroup);
   const checkboxSelection = useSelector(
-    (state) => state.group.checkboxSelection
+    (state) => state.group.checkboxSelection,
   );
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -91,7 +91,7 @@ const GroupMember = ({
           member_id: row,
           group_id: group.group_id._id,
         })),
-      })
+      }),
     );
     setSelectedRows([]);
     setOpenGroupMemberModal(false);
@@ -106,7 +106,7 @@ const GroupMember = ({
           member_id: row,
           group_id: group.group_id._id,
         })),
-      })
+      }),
     );
 
     setSelectedRows([]);
@@ -121,7 +121,7 @@ const GroupMember = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box className="data-grid" >
+      <Box className="data-grid">
         {isAddTOGroup && (
           <Input
             lable={"Search Members"}
@@ -133,20 +133,20 @@ const GroupMember = ({
                   listUser({
                     search: e.target.value,
                     group_id: group.group_id._id,
-                  })
+                  }),
                 );
               } else {
                 dispatch(
                   listGroupMember({
                     search: e.target.value,
                     group_id: group.group_id._id,
-                  })
+                  }),
                 );
               }
             }}
           ></Input>
         )}
-        <Box sx={{ height: "300px",  marginTop:"10px"}}>
+        <Box sx={{ height: "300px", marginTop: "10px" }}>
           <DataGrid
             rows={data}
             columns={columns}

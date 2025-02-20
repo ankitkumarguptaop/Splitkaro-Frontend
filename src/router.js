@@ -25,29 +25,31 @@ const Router = () => {
 
   const routes = [
     {
-      element: <PrivateRouteAuth><Outlet/></PrivateRouteAuth>,
+      element: (
+        <PrivateRouteAuth>
+          <Outlet />
+        </PrivateRouteAuth>
+      ),
       children: [
         {
           path: "/",
-          element: (
-              <SignIn />
-          ),
+          element: <SignIn />,
         },
         {
           path: "signup",
-          element: (
-              <SignUp />
-          ),
+          element: <SignUp />,
         },
-      ]
+      ],
     },
 
     {
       path: "/home",
-      element: <PrivateRouteHome>
-        <Home />
-      </PrivateRouteHome>
-    }
+      element: (
+        <PrivateRouteHome>
+          <Home />
+        </PrivateRouteHome>
+      ),
+    },
   ];
 
   // return (
@@ -79,7 +81,7 @@ const Router = () => {
   //   </Routes>
   // );
 
-  return routes
+  return routes;
 };
 
 export default Router;

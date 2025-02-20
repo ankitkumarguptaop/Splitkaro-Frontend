@@ -7,7 +7,7 @@ import {
   createExpenseService,
   addParticipantService,
   removeParticipantService,
-  updateSettlementService
+  updateSettlementService,
 } from "../../services/expense.service";
 import {
   LIST_EXPENSE,
@@ -17,7 +17,7 @@ import {
   ADD_PARTICIPANT,
   REMOVE_PARTICIPANT,
   LIST_EXPENSE_PARTICIPANT,
-  UPDATE_SETELMENT_STATUS
+  UPDATE_SETELMENT_STATUS,
 } from "./expense.type";
 
 export const listExpense = createAsyncThunk(LIST_EXPENSE, async (payload) => {
@@ -27,13 +27,16 @@ export const listExpense = createAsyncThunk(LIST_EXPENSE, async (payload) => {
   return data;
 });
 
-export const listExpenseParticipants = createAsyncThunk(LIST_EXPENSE_PARTICIPANT, async (payload) => {
+export const listExpenseParticipants = createAsyncThunk(
+  LIST_EXPENSE_PARTICIPANT,
+  async (payload) => {
     const res = await listExpenseMemberService(payload);
     const data = res.data;
     console.log("res data", data);
     return data;
-  });
-  
+  },
+);
+
 export const updateSettlementExpense = createAsyncThunk(
   UPDATE_SETELMENT_STATUS,
   async (payload) => {
@@ -41,9 +44,8 @@ export const updateSettlementExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return res;
-  }
+  },
 );
-
 
 export const updatedExpense = createAsyncThunk(
   UPDATE_EXPENSE,
@@ -52,7 +54,7 @@ export const updatedExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return res;
-  }
+  },
 );
 
 export const deleteExpense = createAsyncThunk(
@@ -62,7 +64,7 @@ export const deleteExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  }
+  },
 );
 
 export const createExpense = createAsyncThunk(
@@ -72,17 +74,17 @@ export const createExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  }
+  },
 );
 
 export const listExpenseMember = createAsyncThunk(
-    LIST_EXPENSE_PARTICIPANT,
+  LIST_EXPENSE_PARTICIPANT,
   async (payload) => {
     const res = await listExpenseService(payload);
     const data = res.data;
     console.log("res data", data);
     return data;
-  }
+  },
 );
 
 export const addParticipant = createAsyncThunk(
@@ -92,7 +94,7 @@ export const addParticipant = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  }
+  },
 );
 
 export const removeParticipant = createAsyncThunk(
@@ -102,5 +104,5 @@ export const removeParticipant = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  }
+  },
 );

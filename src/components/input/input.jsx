@@ -1,7 +1,7 @@
 import { Box, TextField } from "@mui/material";
 import React from "react";
 import style from "./input.module.css";
-const Input = ({ lable, height, width ,value ,error, setState }) => {
+const Input = ({ lable, height, width, value, error, setState }) => {
   return (
     <TextField
       id="outlined-basic"
@@ -13,7 +13,13 @@ const Input = ({ lable, height, width ,value ,error, setState }) => {
       onChange={setState}
       sx={{
         width: width,
-        input: { alignContent:"center", height: "37px", padding: "5px", color: "#808080" ,fontWeight:"light"},
+        input: {
+          alignContent: "center",
+          height: "37px",
+          padding: "5px",
+          color: "#808080",
+          fontWeight: "light",
+        },
       }}
     ></TextField>
   );
