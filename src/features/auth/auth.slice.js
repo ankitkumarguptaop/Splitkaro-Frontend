@@ -37,7 +37,6 @@ export const authUserSlice = createSlice({
       .addCase(signInUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.currentUser = action.payload.data;
-        console.log(state.currentUser)
         Cookies.set("jwt", action.payload.data.token, {
           expires: 7,
           secure: true,

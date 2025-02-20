@@ -19,6 +19,8 @@
   margin-top: 5px;
   height: 80px;
   width: 63vw;
+  border-bottom-style:solid; 
+  border-bottom-width:1px; 
   background-color: rgb(198, 225, 225);
   div {
     margin: 10px;

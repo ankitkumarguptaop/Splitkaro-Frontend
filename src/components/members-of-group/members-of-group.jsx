@@ -121,7 +121,7 @@ const GroupMember = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box className="recover-data-grid">
+      <Box className="data-grid" >
         {isAddTOGroup && (
           <Input
             lable={"Search Members"}
@@ -146,14 +146,9 @@ const GroupMember = ({
             }}
           ></Input>
         )}
-        <Box sx={{ height: "300px" }}>
+        <Box sx={{ height: "300px",  marginTop:"10px"}}>
           <DataGrid
             rows={data}
-            // getRowId={(member) => {
-            //   console.log(member);
-            //   return member.id;
-            // }}
-
             columns={columns}
             initialState={{
               pagination: {
@@ -164,6 +159,7 @@ const GroupMember = ({
             }}
             pageSizeOptions={[5]}
             checkboxSelection={checkboxSelection}
+            onCellClick={checkboxSelection}
             onStateChange={(event) => {
               setSelectedRows(event.rowSelection);
             }}

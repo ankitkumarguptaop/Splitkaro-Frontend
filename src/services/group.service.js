@@ -18,7 +18,7 @@ export const deleteGroupService = async (payload) => {
 };
 
 export const updateGroupService = async (payload) => {
-  const { group_id ,updatedData } = payload;
+  const { group_id, updatedData } = payload;
   return await axios.patch(
     `${process.env.REACT_APP_BACKEND_URL}groups/${group_id}`,
     updatedData
@@ -56,7 +56,6 @@ export const addMembersService = async (payload) => {
 
 export const removeMembersService = async (payload) => {
   const { group_id } = payload;
-  console.log("payload", payload);
   return await axios.delete(
     `${process.env.REACT_APP_BACKEND_URL}groups/members/${group_id}`,
     { data: payload }

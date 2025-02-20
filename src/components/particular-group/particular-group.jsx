@@ -30,6 +30,7 @@ import {
   listExpense,
   listExpenseMember,
   listExpenseParticipants,
+  updatedExpense,
 } from "../../features/expense/expense.action";
 
 const ParticularGroup = ({ setInput, setIsEditState }) => {
@@ -40,15 +41,15 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   const expenseMembers = useSelector(
     (state) => state.expense.expenseParticipant
   );
-  console.log("ggggggg", expenseMembers);
 
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [isAddTOGroup, setAddTOGroup] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const [openGroupMemberModal, setOpenGroupMemberModal] = useState(false);
   const [isEditStateExpense, setIsEditStateExpense] = useState(false);
+  const [particularExpenseId, setParticularExpenseId] = useState(false);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -83,7 +84,6 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function viewMembers() {
     setAddTOGroup(false);
     dispatch(setCheckboxSelection(false));
-    // dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
   }
@@ -91,7 +91,6 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function addMembers() {
     setAddTOGroup(true);
     dispatch(setCheckboxSelection(true));
-    // dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
     dispatch(listUser({ group_id: group.group_id._id, search: "" }));
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
@@ -100,7 +99,6 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function removeMembers() {
     setAddTOGroup(false);
     dispatch(setCheckboxSelection(true));
-    // dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
   }
@@ -154,6 +152,10 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
       <>
         {expenses.map((expense) => (
           <ExpenseCard
+            setParticularExpenseId={setParticularExpenseId}
+            setIsEditStateExpense={setIsEditStateExpense}
+            setIsOpenModal={setIsOpenModal}
+            setExpense={setExpense}
             key={expense._id}
             id={expense._id}
             amount={expense.amount}
@@ -169,13 +171,35 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
     );
   }
 
+  function editExpense() {
+    dispatch(
+      updatedExpense({
+        expense_id: particularExpenseId,
+        updatedData: {
+          ...expense,
+        },
+      })
+    );
+    setExpense({
+      description: "",
+      amount: "",
+      category: "",
+    });
+    setIsEditState(false);
+    setIsOpenModal(false);
+    setIsEditStateExpense(false)
+  }
+
   function handleCloseModal() {
     setExpense({
       description: "",
       amount: "",
       category: "",
     });
+    setIsEditState(false);
     setIsOpenModal(false);
+    setIsEditStateExpense(false)
+
   }
 
   return (
@@ -249,7 +273,6 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
                 height: "100%",
                 maxWidth: "100%",
                 bgcolor: "background.paper",
-                borderRadius: "10px",
                 backgroundColor: "rgb(225, 222, 222)",
               }}
             >
@@ -318,7 +341,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
                 disableRipple
                 disableElevation
                 className="add-expense"
-                onClick={addExpense}
+                onClick={isEditStateExpense ? editExpense : addExpense}
                 variant="contained"
               >
                 {isEditStateExpense ? "Edit" : "Create"}

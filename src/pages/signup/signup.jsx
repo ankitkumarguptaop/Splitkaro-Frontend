@@ -36,7 +36,6 @@ const Signup = () => {
     try {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider).then((result) => {
-        console.log(result.user);
         if (result.user) {
           toast.success("User successfuly signup!", {
             position: "top-center",

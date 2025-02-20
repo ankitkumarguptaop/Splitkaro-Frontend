@@ -33,7 +33,6 @@ const Group = () => {
   const group = useSelector((state) => state.group.currentSelectedGroup);
   const isOpenModal = useSelector((state) => state.group.isOpenModal);
   const currentUser = useSelector((state) => state.auth.currentUser);
-  console.log('✌️groups --->', groups);
 
   const [input, setInput] = useState({
     groupName: "",
@@ -135,6 +134,7 @@ const Group = () => {
         groupName: "",
         description: "",
       });
+      setIsEditState(false);
     } catch (error) {
       console.log(error);
     }
@@ -190,7 +190,6 @@ const Group = () => {
     );
   }
 
-  // console.log(groups)
 
   return (
     <>

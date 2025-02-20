@@ -31,7 +31,6 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteExpense.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.expenses = state.expenses.filter(
           (expense) => expense._id !== action.payload.expense._id
         );
@@ -45,6 +44,10 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updatedExpense.fulfilled, (state, action) => {
+        const index = state.expenses.findIndex(
+          (expense) => expense._id === action.payload.data._id
+        );
+        state.expenses.splice(index, 1, action.payload.data.expense);
         state.isLoading = false;
       })
       .addCase(updatedExpense.rejected, (state, action) => {
@@ -102,7 +105,6 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addParticipant.fulfilled, (state, action) => {
-        console.log(" --->", action.payload);
         state.expenseParticipant = [
           ...state.expenseParticipant,
           action.payload,

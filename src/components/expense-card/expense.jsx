@@ -1,16 +1,18 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import style from "./expense.module.css";
 import {
   Box,
   FormControl,
+  Menu,
+  MenuItem,
   Modal,
   Table,
   TableBody,
@@ -23,17 +25,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import Input from "../input/input";
 import { useState } from "react";
-import { listGroupMember } from "../../features/group/group.action";
 import {
   addParticipant,
   deleteExpense,
-  listExpenseMember,
-  updatedExpense,
   updateSettlementExpense,
 } from "../../features/expense/expense.action";
 import { useEffect } from "react";
 
 export default function ExpenseCard({
+  setParticularExpenseId,
+  setIsEditStateExpense,
+  setIsOpenModal,
+  setExpense,
   amount,
   expenseDescription,
   category,
@@ -48,12 +51,8 @@ export default function ExpenseCard({
 
   const [payAmount, setPayAmount] = useState("");
   const [leftAmount, setLeftPayAmount] = useState(parseInt(amount));
+  const [assignedAmmount, setAssignAmount] = useState(0);
 
-  // const expenseMembers = useSelector((state) => state.expense.expenseParticipant);
-  console.log("✌️expenseMembers --->", members, id);
-
-  console.log("groupMembers --->", groupMembers);
-  console.log("Members --->", members);
   const group = useSelector((state) => state.group.currentSelectedGroup);
 
   const data = groupMembers
@@ -82,14 +81,16 @@ export default function ExpenseCard({
     useState(false);
   const [openAddParticipantModal, setOpenAddParticipantModal] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const styleModal = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "27vw",
-    minWidth: "550px",
-    minHeight: 410,
+    minWidth: "590px",
+    height: 400,
     bgcolor: "rgb(255, 255, 255)",
     color: "black",
     p: 3,
@@ -99,7 +100,7 @@ export default function ExpenseCard({
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "27vw",
-    minWidth: "350px",
+    minWidth: "500px",
     height: "250px",
     bgcolor: "rgb(255, 255, 255)",
     color: "black",
@@ -164,21 +165,64 @@ export default function ExpenseCard({
       })
     );
   }
-  let assignedAmmount = 0;
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function updatePartcularExpense() {
+    setParticularExpenseId(id);
+    setIsEditStateExpense(true);
+    setIsOpenModal(true);
+    setExpense({
+      description: expenseDescription,
+      amount: amount,
+      category: category,
+    });
+  }
+
+  let Ammount = 0;
   useEffect(() => {
     for (let i = 0; i < members.length; i++) {
-      assignedAmmount += members[i].pay_amount;
+      Ammount += members[i].pay_amount;
     }
-    console.log(assignedAmmount);
-  }, [members, leftAmount]);
+    setLeftPayAmount(amount - assignedAmmount);
+    setAssignAmount(Ammount);
+  }, [members]);
+
   return (
     <>
       <Card sx={{ maxWidth: "95%", margin: "10px" }}>
         <CardActionArea>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {category}
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography gutterBottom variant="h5" component="div">
+                {category}
+              </Typography>
+              {members.length <= 0 && (
+                <>
+                  <MoreVertIcon
+                    sx={{ cursor: "pointer" }}
+                    id="demo-positioned-button"
+                    aria-controls={open ? "demo-positioned-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                  ></MoreVertIcon>
+                  <Menu
+                    id="demo-positioned-menu"
+                    aria-labelledby="demo-positioned-button"
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={() => setAnchorEl(null)}
+                  >
+                    <MenuItem onClick={updatePartcularExpense}>
+                      Update Expense
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
+            </Box>
             <Typography gutterBottom variant="h5" component="div">
               Expense: {amount}
             </Typography>
@@ -315,14 +359,6 @@ export default function ExpenseCard({
           </Box>
 
           <Box className="Add-close-button">
-            {/* <Button
-              sx={{ marginLeft: "5px", marginRight: "5px" }}
-              variant="contained"
-              onClick={addMemberToExpense}
-            >
-              Add
-            </Button> */}
-
             <Button
               variant="contained"
               onClick={() => {
@@ -350,11 +386,7 @@ export default function ExpenseCard({
                 error={leftAmount < 0}
                 setState={(e) => {
                   setPayAmount(e.target.value);
-                  setLeftPayAmount(
-                    parseInt(amount) -
-                      parseInt(assignedAmmount) -
-                      parseInt(e.target.value)
-                  );
+                  setLeftPayAmount(amount - assignedAmmount - e.target.value);
                 }}
               ></Input>
             </Box>
@@ -377,7 +409,7 @@ export default function ExpenseCard({
             </Box>
 
             <Box className="Add-edit-close-button">
-              {leftAmount > 0 && (
+              {leftAmount >= 0 && (
                 <Button
                   disableRipple
                   disableElevation
@@ -392,7 +424,10 @@ export default function ExpenseCard({
                 disableRipple
                 disableElevation
                 className="close-modal"
-                onClick={() => setOpenAddParticipantModal(false)}
+                onClick={() => {
+                  setOpenAddParticipantModal(false);
+                  setPayAmount("");
+                }}
                 variant="contained"
               >
                 {"Close"}

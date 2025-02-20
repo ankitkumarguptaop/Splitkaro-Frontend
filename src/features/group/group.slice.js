@@ -56,11 +56,9 @@ export const groupSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updatedGroup.fulfilled, (state, action) => {
-        console.log("✌️action.payload --->", action.payload);
         const index = state.groups.findIndex(
           (group) => group.group_id._id === action.payload.data.group._id
         );
-        console.log("✌️index --->", index);
         state.groups[index].group_id = { ...action.payload.data.group };
         state.currentSelectedGroup = {
           group_id: { ...action.payload.data.group },
@@ -77,7 +75,6 @@ export const groupSlice = createSlice({
       })
       .addCase(listGroup.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log("list");
         state.groups = action.payload;
       })
       .addCase(listGroup.rejected, (state, action) => {
