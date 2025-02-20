@@ -9,6 +9,7 @@ import {
   removeParticipant,
   updateSettlementExpense,
 } from "./expense.action";
+import { socket } from "../../configs/socket";
 
 const initialState = {
   expenses: [],
@@ -32,7 +33,7 @@ export const expenseSlice = createSlice({
       })
       .addCase(deleteExpense.fulfilled, (state, action) => {
         state.expenses = state.expenses.filter(
-          (expense) => expense._id !== action.payload.expense._id,
+          (expense) => expense._id !== action.payload.expense._id
         );
         state.isLoading = false;
       })
@@ -45,7 +46,7 @@ export const expenseSlice = createSlice({
       })
       .addCase(updatedExpense.fulfilled, (state, action) => {
         const index = state.expenses.findIndex(
-          (expense) => expense._id === action.payload.data._id,
+          (expense) => expense._id === action.payload.data._id
         );
         state.expenses.splice(index, 1, action.payload.data.expense);
         state.isLoading = false;
@@ -59,7 +60,7 @@ export const expenseSlice = createSlice({
       })
       .addCase(updateSettlementExpense.fulfilled, (state, action) => {
         const index = state.expenseParticipant.findIndex(
-          (participant) => participant._id === action.payload.data._id,
+          (participant) => participant._id === action.payload.data._id
         );
         state.expenseParticipant.splice(index, 1, action.payload.data);
         state.isLoading = false;
@@ -84,6 +85,8 @@ export const expenseSlice = createSlice({
       })
       .addCase(createExpense.fulfilled, (state, action) => {
         state.expenses = [...state.expenses, action.payload];
+        console.log(action.payload);
+        socket.emit("create-expense", action.payload.group_id);
         state.isLoading = false;
       })
       .addCase(createExpense.rejected, (state, action) => {

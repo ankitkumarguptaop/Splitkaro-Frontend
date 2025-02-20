@@ -159,7 +159,7 @@ const GroupMember = ({
             }}
             pageSizeOptions={[5]}
             checkboxSelection={checkboxSelection}
-            onCellClick={checkboxSelection}
+          
             onStateChange={(event) => {
               setSelectedRows(event.rowSelection);
             }}

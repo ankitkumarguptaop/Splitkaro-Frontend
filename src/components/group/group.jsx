@@ -26,6 +26,7 @@ import {
   setGroupModal,
 } from "../../features/group/group.slice";
 import ParticularGroup from "../particular-group/particular-group";
+import { socket } from "../../configs/socket";
 
 const Group = () => {
   const dispatch = useDispatch();
@@ -144,6 +145,9 @@ const Group = () => {
     dispatch(listGroup({ user_id: currentUser.user._id }));
   }, [currentUser]);
 
+
+
+
   function renderRow(props) {
     const { index, style } = props;
     return (
@@ -151,7 +155,8 @@ const Group = () => {
         {groups &&
           groups.map((group) => (
             <List
-              onClick={() => dispatch(setCurrentSeletedGroup(group))}
+              onClick={() => { dispatch(setCurrentSeletedGroup(group)) ; 
+              }}
               className={style["group-list"]}
               sx={{
                 width: "100%",

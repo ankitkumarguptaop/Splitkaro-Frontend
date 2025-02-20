@@ -6,11 +6,13 @@ import style from "./navbar.module.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import AccountMenu from "../profile/profile";
+import { socket } from "../../configs/socket";
 
 const Navbar = () => {
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const [pictureUrl, setPictureUrl] = useState("");
+
 
   useEffect(() => {
     if (currentUser.user.avatar.startsWith("http")) {

@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { signInUser, signUpUser, googleAuth } from "./auth.action";
+
 import Cookies from "js-cookie";
+import { socket } from "../../configs/socket";
 
 const initialState = {
   currentUser: null,
@@ -41,6 +43,8 @@ export const authUserSlice = createSlice({
           expires: 7,
           secure: true,
         });
+
+        socket.connect();
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -56,6 +60,7 @@ export const authUserSlice = createSlice({
           expires: 7,
           secure: true,
         });
+        socket.connect();
       })
       .addCase(googleAuth.rejected, (state, action) => {
         state.isLoading = false;
