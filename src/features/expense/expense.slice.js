@@ -10,6 +10,7 @@ import {
   updateSettlementExpense,
 } from "./expense.action";
 import { socket } from "../../configs/socket";
+import { useSelector } from "react-redux";
 
 const initialState = {
   expenses: [],
@@ -60,9 +61,19 @@ export const expenseSlice = createSlice({
       })
       .addCase(updateSettlementExpense.fulfilled, (state, action) => {
         const index = state.expenseParticipant.findIndex(
-          (participant) => participant._id === action.payload.data._id
+          (participant) =>
+            participant._id === action.payload.data.updatedExpense._id
         );
-        state.expenseParticipant.splice(index, 1, action.payload.data);
+        state.expenseParticipant.splice(
+          index,
+          1,
+          action.payload.data.updatedExpense
+        );
+
+        socket.emit("settlement", {
+          room: action.payload.data.room,
+          message: action.payload.data.message,
+        });
         state.isLoading = false;
       })
       .addCase(updateSettlementExpense.rejected, (state, action) => {
@@ -74,6 +85,13 @@ export const expenseSlice = createSlice({
       })
       .addCase(listExpense.fulfilled, (state, action) => {
         state.expenses = action.payload;
+        const expenseIds = action.payload.map((expense) => {
+          return expense._id;
+        });
+        socket.emit("join-expense", expenseIds);
+
+        console.log(expenseIds);
+
         state.isLoading = false;
       })
       .addCase(listExpense.rejected, (state, action) => {
@@ -84,9 +102,12 @@ export const expenseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createExpense.fulfilled, (state, action) => {
-        state.expenses = [...state.expenses, action.payload];
+        state.expenses = [...state.expenses, action.payload.expense];
         console.log(action.payload);
-        socket.emit("create-expense", action.payload.group_id);
+        socket.emit("create-expense", {
+          room: action.payload.expense.group_id,
+          message: action.payload.message,
+        });
         state.isLoading = false;
       })
       .addCase(createExpense.rejected, (state, action) => {

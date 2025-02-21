@@ -8,10 +8,19 @@ import { useDispatch } from "react-redux";
 
 function App() {
   const router = useRoutes(Router());
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   useEffect(() => {
     socket.on("create-expense-notification", (message) => {
-      dispatch(setLiveNotification(message));
+    console.log("gdyuvhgbfhgbvdh============================")
+
+      dispatch(setLiveNotification({message : message}));
+      console.log("✌️message --->", message);
+    });
+
+    socket.on("settlement-notification", (message) => {
+    console.log("gdyuvhgbfhgbvdh============================")
+
+      dispatch(setLiveNotification({message : message}));
       console.log("✌️message --->", message);
     });
   });

@@ -28,7 +28,7 @@ import Input from "../input/input";
 import {
   createExpense,
   listExpense,
-  listExpenseMember,
+
   listExpenseParticipants,
   updatedExpense,
 } from "../../features/expense/expense.action";
@@ -39,7 +39,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   const expenses = useSelector((state) => state.expense.expenses);
   const currentUser = useSelector((state) => state.auth.currentUser);
   const expenseMembers = useSelector(
-    (state) => state.expense.expenseParticipant,
+    (state) => state.expense.expenseParticipant
   );
 
   const groupMembers = useSelector((state) => state.group.currentGroupMembers);
@@ -84,6 +84,8 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function viewMembers() {
     setAddTOGroup(false);
     dispatch(setCheckboxSelection(false));
+    dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
+
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
   }
@@ -92,6 +94,8 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
     setAddTOGroup(true);
     dispatch(setCheckboxSelection(true));
     dispatch(listUser({ group_id: group.group_id._id, search: "" }));
+    dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
+
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
   }
@@ -99,6 +103,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
   function removeMembers() {
     setAddTOGroup(false);
     dispatch(setCheckboxSelection(true));
+    dispatch(listGroupMember({ search: "", group_id: group.group_id._id }));
     setOpenGroupMemberModal(true);
     setAnchorEl(false);
   }
@@ -117,7 +122,9 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
         description: expense.description,
         user_id: currentUser.user._id,
         group_id: group.group_id._id,
-      }),
+        group_name: group.group_id.name,
+        user_name: currentUser.user.name,
+      })
     );
 
     setExpense({
@@ -133,14 +140,14 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
       dispatch(
         listExpense({
           group_id: group?.group_id?._id,
-        }),
+        })
       );
 
     group &&
       dispatch(
         listExpenseParticipants({
           group_id: group?.group_id?._id,
-        }),
+        })
       );
 
     group &&
@@ -163,7 +170,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
             category={expense.category}
             owner={expense.created_by}
             members={expenseMembers.filter(
-              (member) => member.expense_id === expense._id,
+              (member) => member.expense_id === expense._id
             )}
           ></ExpenseCard>
         ))}
@@ -178,7 +185,7 @@ const ParticularGroup = ({ setInput, setIsEditState }) => {
         updatedData: {
           ...expense,
         },
-      }),
+      })
     );
     setExpense({
       description: "",
