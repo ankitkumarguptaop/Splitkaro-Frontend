@@ -34,7 +34,7 @@ export const listExpenseParticipants = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  },
+  }
 );
 
 export const updateSettlementExpense = createAsyncThunk(
@@ -44,7 +44,7 @@ export const updateSettlementExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return res;
-  },
+  }
 );
 
 export const updatedExpense = createAsyncThunk(
@@ -54,7 +54,7 @@ export const updatedExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return res;
-  },
+  }
 );
 
 export const deleteExpense = createAsyncThunk(
@@ -64,7 +64,7 @@ export const deleteExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  },
+  }
 );
 
 export const createExpense = createAsyncThunk(
@@ -74,7 +74,7 @@ export const createExpense = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  },
+  }
 );
 
 export const listExpenseMember = createAsyncThunk(
@@ -84,7 +84,7 @@ export const listExpenseMember = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  },
+  }
 );
 
 export const addParticipant = createAsyncThunk(
@@ -94,7 +94,7 @@ export const addParticipant = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  },
+  }
 );
 
 export const removeParticipant = createAsyncThunk(
@@ -104,5 +104,5 @@ export const removeParticipant = createAsyncThunk(
     const data = res.data;
     console.log("res data", data);
     return data;
-  },
+  }
 );

@@ -78,9 +78,7 @@ export const groupSlice = createSlice({
       .addCase(listGroup.fulfilled, (state, action) => {
         state.groups = action.payload;
 
-        console.log(action.payload);
         const groupIds = action.payload.map((group) => group.group_id._id);
-        console.log("✌️groupIds --->", groupIds);
 
         socket.emit("join-groups", groupIds);
         state.isLoading = false;

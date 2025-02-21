@@ -11,17 +11,11 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     socket.on("create-expense-notification", (message) => {
-    console.log("gdyuvhgbfhgbvdh============================")
-
-      dispatch(setLiveNotification({message : message}));
-      console.log("✌️message --->", message);
+      dispatch(setLiveNotification({ message: message }));
     });
 
     socket.on("settlement-notification", (message) => {
-    console.log("gdyuvhgbfhgbvdh============================")
-
-      dispatch(setLiveNotification({message : message}));
-      console.log("✌️message --->", message);
+      dispatch(setLiveNotification({ message: message }));
     });
   });
 

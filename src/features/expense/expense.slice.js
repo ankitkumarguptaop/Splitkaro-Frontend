@@ -90,7 +90,6 @@ export const expenseSlice = createSlice({
         });
         socket.emit("join-expense", expenseIds);
 
-        console.log(expenseIds);
 
         state.isLoading = false;
       })
@@ -103,7 +102,6 @@ export const expenseSlice = createSlice({
       })
       .addCase(createExpense.fulfilled, (state, action) => {
         state.expenses = [...state.expenses, action.payload.expense];
-        console.log(action.payload);
         socket.emit("create-expense", {
           room: action.payload.expense.group_id,
           message: action.payload.message,
