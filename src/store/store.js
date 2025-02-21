@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "../features/auth/auth.slice";
+import notificationReducer from "../features/notification/notification.slice";
 import groupReducer from "../features/group/group.slice";
 import userReducer from "../features/user/user.slice";
 import expenseReducer from "../features/expense/expense.slice";
@@ -23,6 +24,7 @@ export const store = configureStore({
     group: groupReducer,
     user: userReducer,
     expense: expenseReducer,
+    notification : notificationReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
