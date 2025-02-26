@@ -237,6 +237,8 @@ const Signup = () => {
             width={"400px"}
             value={input.password}
             error={error.passwordError}
+            isPasswordFeild={true}
+
             setState={(e) =>
               handleInput(e, passwordPattern, "password", "passwordError")
             }

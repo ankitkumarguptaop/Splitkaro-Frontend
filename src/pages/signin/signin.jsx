@@ -157,7 +157,9 @@ const Signin = () => {
             setState={(e) =>
               handleInput(e, emailPattern, "email", "emailError")
             }
-          ></Input>
+          >
+
+          </Input>
         </Box>
         <Box>
           <Typography
@@ -171,10 +173,13 @@ const Signin = () => {
             width={"400px"}
             value={input.password}
             error={error.passwordError}
+            isPasswordFeild={true}
             setState={(e) =>
               handleInput(e, passwordPattern, "password", "passwordError")
             }
-          ></Input>
+          >
+
+          </Input>
           <Box className={style["forgot-password"]}>
             <Typography
               sx={{

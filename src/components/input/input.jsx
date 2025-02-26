@@ -1,9 +1,17 @@
-import { Box, TextField } from "@mui/material";
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import React from "react";
 import style from "./input.module.css";
-const Input = ({ lable, height, width, value, error, setState }) => {
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useState } from "react";
+const Input = ({ lable, height, width, value, error, setState  ,isPasswordFeild=false}) => {
+  const [showPassword, setShowPassword] = useState(true);
+
+  const handleTogglePassword = () => {
+    setShowPassword((prev) => !prev);
+  };
   return (
     <TextField
+      type={showPassword ? "text" : "password"}
       id="outlined-basic"
       className={style.input}
       variant="outlined"
@@ -20,7 +28,20 @@ const Input = ({ lable, height, width, value, error, setState }) => {
           color: "#808080",
           fontWeight: "light",
         },
+
       }}
+
+      InputProps={ isPasswordFeild && {
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton onClick={handleTogglePassword} edge="end">
+              {!showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+
+
     ></TextField>
   );
 };
